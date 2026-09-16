@@ -35,3 +35,7 @@ ai-blog-raw/**
 *.log
 # unpublished raw materials
 notes/
+
+# Local research artifacts and editorial working copies
+/outputs/
+/_workspace/

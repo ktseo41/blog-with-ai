@@ -1,0 +1,29 @@
+---
+title: '2017–2025 올해의 책'
+description: '소설가·출판인·독자·언론이 고른 책을 검색하고 비교한다. 여러 선정처에 함께 오른 책과 연도별 1위를 살펴보고, 읽고 싶은 책만 골라 CSV로 저장할 수 있다.'
+created_at: '2026-09-16T09:22:29+09:00'
+updated_at: '2026-09-16T10:31:34+09:00'
+tags: ['책', '소설', '올해의 책', '독서']
+---
+
+import BookExplorer from '../../components/BookExplorer.astro';
+
+<BookExplorer>
+  <section class="book-reading-notes">
+    <h2>읽고 싶은 책만 골라 저장하기</h2>
+    <p>책 옆 체크박스로 고른 목록은 ‘선택한 책’에서 볼 수 있다. 선택은 같은 브라우저에 저장되며, ‘선택한 책 CSV’로 제목·저자·선정 횟수·선정처·연도·부문별 내역·출처를 내려받을 수 있다. 이 CSV에는 선택한 책의 전체 선정 내역을 집계한다.</p>
+    <p><a href="/books/records.csv" download>전체 선정 기록 CSV</a> · <a href="/books/csv.zip" download>선정처별 CSV 묶음</a></p>
+  </section>
+</BookExplorer>
+
+## 출처
+
+AI(GPT-6·Grok)를 활용해 조사·정리했다. 자료 확인일은 2026년 9월 15일이며, 2017–2025년의 연말 선정 결과를 다룬다. 도서명·저자·선정 주체와 원문 링크를 기록했고 책별 묶음과 선정 횟수·선정처 수는 이 자료에서 집계했다.
+
+YES24의 작가·출판인 추천과 독자 투표, 교보문고의 소설가 설문, 알라딘의 출판인 선정과 독자 투표, 시사IN의 출판인 설문, 한겨레·경향신문·문화일보의 기자 선정을 포함했다. 각 기관의 9개년 전체 목록을 모두 확보한 자료는 아니다. 연도별 수록 범위는 표 아래의 ‘선정처별 수록 범위와 집계 방법’에서 확인할 수 있다.
+
+- [YES24 2022년 작가·출판인 추천](https://www.yes24.com/campaign/01_Book/2022/1123Award.aspx), [알라딘 2022년 출판인 선정](https://www.aladin.co.kr/events/wevent.aspx?EventId=241138&idx=1#dw)
+- [교보문고 소설가 선정 역대 1위](https://casting.kyobobook.co.kr/post/detail/32542), [시사IN 2023년 출판인 설문](https://www.sisain.co.kr/news/articleView.html?idxno=51824)
+- [한겨레 2022년 국내서](https://www.hani.co.kr/arti/culture/book/1072853.html), [경향신문 2022년 올해의 책](https://www.khan.co.kr/article/202212240805011), [문화일보 2022년 올해의 책](https://www.munhwa.com/article/11333704)
+
+위 링크는 대표 선정 기획이다. 개별 책을 펼치면 해당 연도의 출처가 나온다. 서점의 발표를 보도한 기사는 원래 선정한 서점에 귀속했으며, 보도 매체를 별도 선정처로 추가하지 않았다.

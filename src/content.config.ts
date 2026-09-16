@@ -10,6 +10,7 @@ const blog = defineCollection({
 		z.object({
 			title: z.string(),
 			description: z.string(),
+			tags: z.array(z.string()).optional(),
 			// 원본(비공개 작업 저장소) 기준 최초 작성 시각. 분 단위까지 있으면
 			// 표시 측에서 시각을 함께 노출한다. 문자열을 Date로 변환.
 			created_at: z.coerce.date(),
