@@ -1,0 +1,717 @@
+{
+  "asOf": "2026-11-08",
+  "metrics": {
+    "gpqa": {
+      "label": "GPQA Diamond",
+      "description": "대학원 수준 과학 추론 · Diamond 부분집합",
+      "note": "GPQA 전체 점수와 구분합니다. 프롬프트·샘플링·생각 시간은 발표 주체마다 다릅니다."
+    },
+    "mmlupro": {
+      "label": "MMLU-Pro",
+      "description": "더 어려운 다분야 지식·추론",
+      "note": "기존 MMLU와 시험·선택지 구성이 다릅니다. 두 점수를 같은 축에서 이어 읽지 않습니다."
+    },
+    "lcb6": {
+      "label": "LiveCodeBench v6",
+      "description": "경진대회 코딩 · v6",
+      "note": "v5·Pro·서로 다른 문제 수집 기간의 점수는 넣지 않았습니다. 생성 예산은 서로 다를 수 있습니다."
+    },
+    "mmmupro": {
+      "label": "MMMU-Pro",
+      "description": "이미지를 읽고 푸는 다분야 문제",
+      "note": "기존 MMMU와 구분합니다. 이미지 해상도·시각 토큰 예산·세부 평가 방식은 원문을 확인하세요."
+    },
+    "mmlu": {
+      "label": "MMLU",
+      "description": "초기 모델의 다분야 지식 변화",
+      "note": "2023년 모델의 비교 출발점입니다. PT(사전학습 모델)와 IT(지시학습 모델), CoT 조건을 구분해서 보세요."
+    },
+    "humaneval": {
+      "label": "HumanEval",
+      "description": "짧은 Python 함수 생성 · pass@1",
+      "note": "저장소 전체를 고치는 에이전트 성능과 다릅니다. Gemma 4 E4B의 같은 점수는 확인되지 않았습니다."
+    },
+    "aime26": {
+      "label": "AIME 2026",
+      "description": "수학 경시 문제 · 도구 없음",
+      "note": "2024·2025년도 AIME 점수는 다른 문제이므로 섞지 않습니다. 이 항목은 Google의 Gemma 4 비교표만 수록합니다."
+    },
+    "mrcr": {
+      "label": "MRCR v2 · 128k",
+      "description": "8-needle · 긴 문맥 검색·이해",
+      "note": "128k 평균 점수만 수록했습니다. 최대 입력 길이가 곧 긴 문맥의 정답률은 아닙니다."
+    }
+  },
+  "sources": {
+    "llama2": {
+      "title": "Meta · Llama 2 모델 카드",
+      "url": "https://huggingface.co/meta-llama/Llama-2-70b-hf"
+    },
+    "gpt4": {
+      "title": "OpenAI · GPT-4 Technical Report, Table 2",
+      "url": "https://arxiv.org/pdf/2303.08774#page=7"
+    },
+    "mistral": {
+      "title": "Mistral · Mistral 7B, Table 2",
+      "url": "https://arxiv.org/html/2310.06825#S3"
+    },
+    "gemma1": {
+      "title": "Google · Gemma 1 모델 카드",
+      "url": "https://ai.google.dev/gemma/docs/core/model_card"
+    },
+    "claude3": {
+      "title": "Anthropic · Claude 3 Model Card",
+      "url": "https://assets.anthropic.com/m/61e7d27f8c8f5919/original/Claude-3-Model-Card.pdf"
+    },
+    "claude35": {
+      "title": "Anthropic · Claude 3.5 Sonnet 발표",
+      "url": "https://www.anthropic.com/news/claude-3-5-sonnet"
+    },
+    "claude35oct": {
+      "title": "Anthropic · 2024년 10월 모델 카드, Table 7",
+      "url": "https://assets.anthropic.com/m/1cd9d098ac3e6467/original/Claude-3-Model-Card-October-Addendum.pdf#page=6"
+    },
+    "llama31": {
+      "title": "Meta · Llama 3.1 모델 카드",
+      "url": "https://huggingface.co/meta-llama/Llama-3.1-405B-Instruct"
+    },
+    "r1": {
+      "title": "DeepSeek · R1 모델 카드와 비교표",
+      "url": "https://huggingface.co/deepseek-ai/DeepSeek-R1"
+    },
+    "gemma3": {
+      "title": "Google · Gemma 3 27B 모델 카드 (PT 점수)",
+      "url": "https://huggingface.co/google/gemma-3-27b-it"
+    },
+    "gemini25": {
+      "title": "Google · Gemini 2.5 Pro GA 모델 카드, 2025-06",
+      "url": "https://storage.googleapis.com/deepmind-media/Model-Cards/Gemini-2-5-Pro-Model-Card.pdf#page=5"
+    },
+    "gemini31": {
+      "title": "Google · Gemini 3.1 Pro 모델 카드, 2026-02",
+      "url": "https://deepmind.google/models/model-cards/gemini-3-1-pro/"
+    },
+    "gemma4": {
+      "title": "Google · Gemma 4 공식 모델 카드",
+      "url": "https://huggingface.co/google/gemma-4-E4B-it#benchmark-results"
+    },
+    "qwen35": {
+      "title": "Qwen · Qwen3.5-4B 공식 모델 카드",
+      "url": "https://huggingface.co/Qwen/Qwen3.5-4B"
+    },
+    "aa": {
+      "title": "Artificial Analysis · 현행 지수 v5.0.1, 2026-11-08 열람",
+      "url": "https://artificialanalysis.ai/models/gemma-4-e4b/"
+    },
+    "gemini4": {
+      "title": "Google · Gemini 4 현행 공식 비교표, 2026-11-08 열람",
+      "url": "https://deepmind.google/models/gemini/"
+    },
+    "gemma4launch": {
+      "title": "Google · Gemma 4 발표, 2026-04-02",
+      "url": "https://blog.google/innovation-and-ai/technology/developers-tools/gemma-4/"
+    },
+    "gemma412": {
+      "title": "Google · Gemma 4 12B 발표, 2026-06-03",
+      "url": "https://blog.google/innovation-and-ai/technology/developers-tools/introducing-gemma-4-12B/"
+    },
+    "openai": {
+      "title": "OpenAI 공식 문서 · 현행 GPT-6 계열",
+      "url": "https://developers.openai.com/api/docs/guides/latest-model"
+    },
+    "opus55": {
+      "title": "Anthropic · Claude Opus 5.5 공식 비교표",
+      "url": "https://www.anthropic.com/claude-opus-5-5"
+    }
+  },
+  "models": [
+    {
+      "id": "llama1",
+      "name": "LLaMA 1 65B",
+      "date": "2023-02",
+      "kind": "open",
+      "mode": "PT",
+      "source": "llama2",
+      "scores": {
+        "mmlu": 63.4
+      },
+      "condition": "Meta 비교표 · 5-shot MMLU"
+    },
+    {
+      "id": "gpt4",
+      "name": "GPT-4",
+      "date": "2023-03",
+      "kind": "api",
+      "mode": "IT",
+      "source": "gpt4",
+      "scores": {
+        "mmlu": 86.4,
+        "humaneval": 67.0
+      },
+      "condition": "MMLU 5-shot · HumanEval 0-shot"
+    },
+    {
+      "id": "llama2",
+      "name": "Llama 2 70B",
+      "date": "2023-07",
+      "kind": "open",
+      "mode": "PT",
+      "source": "llama2",
+      "scores": {
+        "mmlu": 68.9
+      },
+      "condition": "Meta 비교표 · 5-shot MMLU"
+    },
+    {
+      "id": "mistral7",
+      "name": "Mistral 7B v0.1",
+      "date": "2023-09",
+      "kind": "open",
+      "mode": "PT",
+      "source": "mistral",
+      "scores": {
+        "mmlu": 60.1,
+        "humaneval": 30.5
+      },
+      "condition": "MMLU 5-shot · HumanEval 0-shot"
+    },
+    {
+      "id": "gemma1",
+      "name": "Gemma 1 7B",
+      "date": "2024-02",
+      "kind": "open",
+      "mode": "PT",
+      "source": "gemma1",
+      "scores": {
+        "mmlu": 64.3,
+        "humaneval": 32.3
+      },
+      "condition": "MMLU 5-shot · HumanEval pass@1"
+    },
+    {
+      "id": "opus3",
+      "name": "Claude 3 Opus",
+      "date": "2024-03",
+      "kind": "api",
+      "mode": "IT",
+      "source": "claude3",
+      "scores": {
+        "mmlu": 86.8,
+        "humaneval": 84.9,
+        "gpqa": 50.4
+      },
+      "condition": "MMLU 5-shot · GPQA 0-shot CoT · HumanEval 0-shot"
+    },
+    {
+      "id": "gpt4o",
+      "name": "GPT-4o (2024-05)",
+      "date": "2024-05",
+      "kind": "api",
+      "mode": "IT",
+      "source": "claude35oct",
+      "scores": {
+        "gpqa": 53.6,
+        "mmlu": 88.7
+      },
+      "condition": "Anthropic 모델 카드의 인용값 · GPQA 0-shot CoT · MMLU 0-shot CoT"
+    },
+    {
+      "id": "sonnet35",
+      "name": "Claude 3.5 Sonnet (6월)",
+      "date": "2024-06",
+      "kind": "api",
+      "mode": "IT",
+      "source": "claude35oct",
+      "scores": {
+        "gpqa": 59.4,
+        "mmlu": 88.7,
+        "mmlupro": 75.1
+      },
+      "condition": "GPQA 0-shot CoT · MMLU 5-shot · MMLU-Pro 0-shot CoT"
+    },
+    {
+      "id": "llama318",
+      "name": "Llama 3.1 8B IT",
+      "date": "2024-07",
+      "kind": "open",
+      "mode": "IT",
+      "source": "llama31",
+      "scores": {
+        "mmlu": 69.4,
+        "mmlupro": 48.3,
+        "humaneval": 72.6
+      },
+      "condition": "MMLU 5-shot · MMLU-Pro 5-shot CoT · HumanEval 0-shot"
+    },
+    {
+      "id": "llama31405",
+      "name": "Llama 3.1 405B IT",
+      "date": "2024-07",
+      "kind": "open",
+      "mode": "IT",
+      "source": "llama31",
+      "scores": {
+        "mmlu": 87.3,
+        "mmlupro": 73.3,
+        "humaneval": 89.0
+      },
+      "condition": "MMLU 5-shot (88.6은 별도 CoT 점수) · GPQA 전체 점수는 Diamond 축에서 제외"
+    },
+    {
+      "id": "sonnet35oct",
+      "name": "Claude 3.5 Sonnet (10월)",
+      "date": "2024-10",
+      "kind": "api",
+      "mode": "IT",
+      "source": "claude35oct",
+      "scores": {
+        "mmlu": 88.7,
+        "mmlupro": 78.0,
+        "gpqa": 65.0
+      },
+      "condition": "GPQA 0-shot CoT · MMLU 5-shot · MMLU-Pro 0-shot CoT"
+    },
+    {
+      "id": "v3",
+      "name": "DeepSeek V3",
+      "date": "2024-12",
+      "kind": "open",
+      "mode": "IT",
+      "source": "r1",
+      "scores": {
+        "mmlu": 88.5,
+        "mmlupro": 75.9,
+        "gpqa": 59.1
+      },
+      "condition": "R1 공식 비교표에 수록된 V3 평가 · GPQA Diamond pass@1"
+    },
+    {
+      "id": "o1",
+      "name": "OpenAI o1 (1217)",
+      "date": "2024-12",
+      "kind": "api",
+      "mode": "추론",
+      "source": "r1",
+      "scores": {
+        "mmlu": 91.8,
+        "gpqa": 75.7
+      },
+      "condition": "DeepSeek R1 공식 비교표의 o1-1217 값 · 타사 인용/평가"
+    },
+    {
+      "id": "r1",
+      "name": "DeepSeek R1 (1월)",
+      "date": "2025-01",
+      "kind": "open",
+      "mode": "추론",
+      "source": "r1",
+      "scores": {
+        "mmlu": 90.8,
+        "mmlupro": 84.0,
+        "gpqa": 71.5
+      },
+      "condition": "R1 최초 버전 · GPQA Diamond pass@1 · 후속 0528 버전과 구분"
+    },
+    {
+      "id": "r1d7",
+      "name": "R1-Distill-Qwen 7B",
+      "date": "2025-01",
+      "kind": "open",
+      "mode": "추론",
+      "source": "r1",
+      "scores": {
+        "gpqa": 49.1
+      },
+      "condition": "R1 공식 증류 모델 비교표 · GPQA Diamond pass@1"
+    },
+    {
+      "id": "r1d14",
+      "name": "R1-Distill-Qwen 14B",
+      "date": "2025-01",
+      "kind": "open",
+      "mode": "추론",
+      "source": "r1",
+      "scores": {
+        "gpqa": 59.1
+      },
+      "condition": "R1 공식 증류 모델 비교표 · GPQA Diamond pass@1"
+    },
+    {
+      "id": "r1d32",
+      "name": "R1-Distill-Qwen 32B",
+      "date": "2025-01",
+      "kind": "open",
+      "mode": "추론",
+      "source": "r1",
+      "scores": {
+        "gpqa": 62.1
+      },
+      "condition": "R1 공식 증류 모델 비교표 · GPQA Diamond pass@1"
+    },
+    {
+      "id": "gemma3pt",
+      "name": "Gemma 3 27B PT",
+      "date": "2025-03",
+      "kind": "open",
+      "mode": "PT",
+      "source": "gemma3",
+      "scores": {
+        "mmlu": 78.6,
+        "humaneval": 48.8
+      },
+      "condition": "PT 행만 사용 · IT 27B와 별개 · MMLU 5-shot"
+    },
+    {
+      "id": "gemma327",
+      "name": "Gemma 3 27B IT",
+      "date": "2025-03",
+      "kind": "open",
+      "mode": "IT",
+      "source": "gemma4",
+      "scores": {
+        "mmlupro": 67.6,
+        "gpqa": 42.4,
+        "lcb6": 29.1,
+        "mmmupro": 49.7,
+        "aime26": 20.8,
+        "mrcr": 13.5
+      },
+      "condition": "Google Gemma 4 비교표에서 재평가 · no think"
+    },
+    {
+      "id": "gemini25",
+      "name": "Gemini 2.5 Pro (GA)",
+      "date": "2025-06",
+      "kind": "api",
+      "mode": "추론",
+      "source": "gemini25",
+      "scores": {
+        "gpqa": 86.4
+      },
+      "condition": "2025년 6월 GA 모델 카드 · 단일 시도 pass@1"
+    },
+    {
+      "id": "gemini3",
+      "name": "Gemini 3 Pro",
+      "date": "2025-11",
+      "kind": "api",
+      "mode": "추론",
+      "source": "gemini31",
+      "scores": {
+        "gpqa": 91.9,
+        "mmmupro": 81.0,
+        "mrcr": 77.0
+      },
+      "condition": "Google 2026-02 비교표 · Thinking High · 도구 없음"
+    },
+    {
+      "id": "gpt52",
+      "name": "GPT-5.2 Thinking",
+      "date": "2025-12",
+      "kind": "api",
+      "mode": "추론",
+      "source": "gemini31",
+      "scores": {
+        "gpqa": 92.4,
+        "mmmupro": 79.5,
+        "mrcr": 83.8
+      },
+      "condition": "Google 모델 카드의 타사 인용값 · xhigh · 도구 없음"
+    },
+    {
+      "id": "opus46",
+      "name": "Claude Opus 4.6",
+      "date": "2026-02",
+      "kind": "api",
+      "mode": "추론",
+      "source": "gemini31",
+      "scores": {
+        "gpqa": 91.3,
+        "mmmupro": 73.9,
+        "mrcr": 84.0
+      },
+      "condition": "Google 모델 카드의 타사 인용값 · Thinking Max · 도구 없음"
+    },
+    {
+      "id": "gemini31",
+      "name": "Gemini 3.1 Pro",
+      "date": "2026-02",
+      "kind": "api",
+      "mode": "추론",
+      "source": "gemini31",
+      "scores": {
+        "gpqa": 94.3,
+        "mmmupro": 80.5,
+        "mrcr": 84.9
+      },
+      "condition": "Thinking High · 도구 없음 · MRCR 128k 평균"
+    },
+    {
+      "id": "qwen354",
+      "name": "Qwen3.5 4B",
+      "date": "2026",
+      "kind": "open",
+      "mode": "추론",
+      "source": "qwen35",
+      "scores": {
+        "mmlupro": 79.1,
+        "gpqa": 76.2,
+        "lcb6": 55.8,
+        "mmmupro": 66.3
+      },
+      "condition": "공식 모델 카드 점수 · 정확한 벤치마크별 추론 예산은 별도 확인 필요 · 발표 월 미수록"
+    },
+    {
+      "id": "qwen359",
+      "name": "Qwen3.5 9B",
+      "date": "2026",
+      "kind": "open",
+      "mode": "추론",
+      "source": "qwen35",
+      "scores": {
+        "mmlupro": 82.5,
+        "gpqa": 81.7,
+        "lcb6": 65.6,
+        "mmmupro": 70.1
+      },
+      "condition": "공식 모델 카드 점수 · 정확한 벤치마크별 추론 예산은 별도 확인 필요 · 발표 월 미수록"
+    },
+    {
+      "id": "gemma4e2",
+      "name": "Gemma 4 E2B",
+      "date": "2026-04",
+      "kind": "open",
+      "mode": "추론 지원",
+      "source": "gemma4",
+      "scores": {
+        "mmlupro": 60.0,
+        "gpqa": 43.4,
+        "lcb6": 44.0,
+        "mmmupro": 44.2,
+        "aime26": 37.5,
+        "mrcr": 19.1
+      },
+      "condition": "Google 공식 IT 성능표 · 추론 지원 모델 · 표의 세부 추론 예산 미기재 · Gemma 3 비교군은 no think",
+      "target": false
+    },
+    {
+      "id": "gemma4e4",
+      "name": "Gemma 4 E4B",
+      "date": "2026-04",
+      "kind": "open",
+      "mode": "추론 지원",
+      "source": "gemma4",
+      "scores": {
+        "mmlupro": 69.4,
+        "gpqa": 58.6,
+        "lcb6": 52.0,
+        "mmmupro": 52.6,
+        "aime26": 42.5,
+        "mrcr": 25.4
+      },
+      "condition": "Google 공식 IT 성능표 · 추론 지원 모델 · 표의 세부 추론 예산 미기재 · Gemma 3 비교군은 no think",
+      "target": true
+    },
+    {
+      "id": "gemma426",
+      "name": "Gemma 4 26B A4B",
+      "date": "2026-04",
+      "kind": "open",
+      "mode": "추론 지원",
+      "source": "gemma4",
+      "scores": {
+        "mmlupro": 82.6,
+        "gpqa": 82.3,
+        "lcb6": 77.1,
+        "mmmupro": 73.8,
+        "aime26": 88.3,
+        "mrcr": 44.1
+      },
+      "condition": "Google 공식 IT 성능표 · 추론 지원 모델 · 표의 세부 추론 예산 미기재 · Gemma 3 비교군은 no think",
+      "target": false
+    },
+    {
+      "id": "gemma431",
+      "name": "Gemma 4 31B",
+      "date": "2026-04",
+      "kind": "open",
+      "mode": "추론 지원",
+      "source": "gemma4",
+      "scores": {
+        "mmlupro": 85.2,
+        "gpqa": 84.3,
+        "lcb6": 80.0,
+        "mmmupro": 76.9,
+        "aime26": 89.2,
+        "mrcr": 66.4
+      },
+      "condition": "Google 공식 IT 성능표 · 추론 지원 모델 · 표의 세부 추론 예산 미기재 · Gemma 3 비교군은 no think",
+      "target": false
+    },
+    {
+      "id": "gemma412",
+      "name": "Gemma 4 12B Unified",
+      "date": "2026-06",
+      "kind": "open",
+      "mode": "추론 지원",
+      "source": "gemma4",
+      "scores": {
+        "mmlupro": 77.2,
+        "gpqa": 78.8,
+        "lcb6": 72.0,
+        "mmmupro": 69.1,
+        "aime26": 77.5,
+        "mrcr": 43.4
+      },
+      "condition": "Google 공식 IT 성능표 · 추론 지원 모델 · 표의 세부 추론 예산 미기재 · Gemma 3 비교군은 no think",
+      "target": false
+    }
+  ],
+  "current": {
+    "version": "Artificial Analysis Intelligence Index v5.0.1",
+    "source": "aa",
+    "models": [
+      {
+        "name": "Gemini 4 Carbon (high)",
+        "value": 60.0
+      },
+      {
+        "name": "Claude Opus 5.5 (max)",
+        "value": 59.0
+      },
+      {
+        "name": "GPT-6 Astra (max)",
+        "value": 57.0
+      },
+      {
+        "name": "GPT-6.1 Sol (max)",
+        "value": 55.0
+      },
+      {
+        "name": "Claude Sonnet 5.5 (max)",
+        "value": 55.0
+      },
+      {
+        "name": "GPT-6.1 Terra (max)",
+        "value": 51.0
+      },
+      {
+        "name": "Muse Wonder Full (max)",
+        "value": 50.0
+      },
+      {
+        "name": "Claude Fable 5.1 (max)",
+        "value": 49.0
+      },
+      {
+        "name": "Kimi K3.1 Pro",
+        "value": 46.0
+      },
+      {
+        "name": "Muse Wonder (max)",
+        "value": 44.0
+      },
+      {
+        "name": "Claude Haiku 5.5 (max)",
+        "value": 36.0
+      },
+      {
+        "name": "Grok 4.7 (xhigh)",
+        "value": 35.0
+      },
+      {
+        "name": "Tencent Hy4",
+        "value": 35.0
+      },
+      {
+        "name": "Qwen3.8 Max (0902)",
+        "value": 34.0
+      },
+      {
+        "name": "DeepSeek V4.1 Flash 1017 (max)",
+        "value": 33.0
+      },
+      {
+        "name": "GLM-5.3 (max)",
+        "value": 32.0
+      },
+      {
+        "name": "Gemini 3.8 Flash (high)",
+        "value": 31.0
+      },
+      {
+        "name": "Inkling 2 Small",
+        "value": 31.0
+      },
+      {
+        "name": "MiMo-V2.6-Pro",
+        "value": 30.0
+      },
+      {
+        "name": "Ling 3.1 Flash 1019",
+        "value": 30.0
+      },
+      {
+        "name": "MiniMax-M3.1-Flash",
+        "value": 29.0
+      },
+      {
+        "name": "GPT-6 Luna (max)",
+        "value": 28.0
+      },
+      {
+        "name": "Mistral Large 4 (high)",
+        "value": 26.0
+      },
+      {
+        "name": "Muse Spark Open (xhigh)",
+        "value": 25.0
+      },
+      {
+        "name": "Qwen3.8 27B (xhigh)",
+        "value": 20.0
+      },
+      {
+        "name": "K2 Horizon 375B A23B",
+        "value": 18.0
+      },
+      {
+        "name": "Beam 1.0",
+        "value": 18.0
+      },
+      {
+        "name": "Nemotron 3.5 Super VL",
+        "value": 14.0
+      }
+    ],
+    "targetValue": null,
+    "note": "현행 페이지에서 E4B는 N/A. 구버전 v4.3의 9점을 이 축에 옮기지 않았습니다. 지수는 정답률(%)이 아닙니다."
+  },
+  "currentTasks": {
+    "label": "Terminal-Bench 4.0 (AA)",
+    "source": "gemini4",
+    "models": [
+      {
+        "name": "Gemini 4 Carbon",
+        "value": 65.2
+      },
+      {
+        "name": "Gemini 4 Argon",
+        "value": 57.1
+      },
+      {
+        "name": "GPT-6 Astra",
+        "value": 59.1
+      },
+      {
+        "name": "Claude Opus 5.5",
+        "value": 59.6
+      },
+      {
+        "name": "Claude Fable 5.1",
+        "value": 52.0
+      }
+    ],
+    "note": "Google 현행 표에 실린 Artificial Analysis 측정값. 각사의 다른 하네스 점수와 섞지 않습니다. E4B의 같은 평가값은 미확인입니다."
+  }
+}

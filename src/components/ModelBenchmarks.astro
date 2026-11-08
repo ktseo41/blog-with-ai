@@ -1,0 +1,113 @@
+---
+import data from '../data/model-benchmarks.json';
+import '../styles/model-benchmarks.css';
+
+const target = data.models.find((m) => m.id === 'gemma4e4')!;
+const initial = data.models.filter((m) => 'gpqa' in m.scores);
+const score = (m: (typeof data.models)[number]) => (m.scores as Record<string, number>).gpqa;
+const current = data.current.models.slice(0, 16);
+---
+
+<section class="bench-explorer" id="benchmark-history" aria-labelledby="benchmark-heading">
+  <h2 id="benchmark-heading">모델이 작아지면서 어디까지 따라왔을까</h2>
+  <p>벤치마크를 바꾸면 다른 능력이 보입니다. 막대를 누르면 평가 조건과 원문을 확인할 수 있습니다.</p>
+  <div class="bench-controls" data-bench-controls hidden>
+    <label>벤치마크<select id="bench-metric">{Object.entries(data.metrics).map(([key, metric]) => <option value={key}>{metric.label}</option>)}</select></label>
+    <label>모델 종류<select id="bench-kind"><option value="all">전체</option><option value="open">공개 가중치</option><option value="api">API 모델</option></select></label>
+    <label>발표 연도<select id="bench-year"><option value="all">2023–2026 전체</option>{['2023', '2024', '2025', '2026'].map((year) => <option value={year}>{year}년</option>)}</select></label>
+    <label>정렬<select id="bench-sort"><option value="date">발표 시기순</option><option value="score">점수 높은 순</option></select></label>
+  </div>
+  <div class="bench-chart-heading"><h3 data-bench-title>GPQA Diamond</h3><output data-bench-count aria-live="polite">{initial.length}개 모델</output></div>
+  <p class="bench-caption" data-bench-note>{data.metrics.gpqa.note}</p>
+  <p class="bench-reference" data-bench-reference>E4B 기준 58.6% · 파란 막대가 기준 모델 · 발표 주체별 공식 수치, 동일 조건 재시험 아님</p>
+  <div class="bench-axis" aria-hidden="true"><span></span><div><span>0</span><span>25</span><span>50</span><span>75</span><span>100%</span></div><span></span></div>
+  <div class="bench-rows" data-bench-rows>
+    {initial.map((model) => <details class:list={['bench-row', { 'is-target': model.id === target.id }]}>
+      <summary><span class="bench-name">{model.name}<small>{model.date} · {model.mode}</small></span><span class="bench-track" aria-hidden="true"><span style={`width:${score(model)}%`}></span></span><strong class="bench-value">{score(model).toFixed(1)}</strong></summary>
+      <div class="bench-row-detail"><p>{model.condition}</p><a href={data.sources[model.source as keyof typeof data.sources].url} target="_blank" rel="noopener noreferrer">{data.sources[model.source as keyof typeof data.sources].title}</a></div>
+    </details>)}
+  </div>
+  <p class="bench-empty" data-bench-empty hidden>이 조건에서 확인한 점수가 없습니다. 연도나 모델 종류를 ‘전체’로 바꿔보세요. 미공개 점수는 0점으로 채우지 않았습니다.</p>
+  <p class="bench-caption">발표 월을 확인하지 않은 모델은 연도만 표시합니다. 그래프에 없는 모델·점수도 있으므로 전체 시장 순위로 해석하지 않습니다.</p>
+  <div class="bench-downloads"><a href="/benchmarks/records.csv" download>출처·평가 조건 포함 CSV</a><a href="/benchmarks/models.json" download>전체 데이터 JSON</a><a href="/benchmarks/gemma4-comparison.png" download>비교 그래프 PNG</a></div>
+  <noscript><p>기본 GPQA 그래프는 JavaScript 없이도 읽을 수 있습니다. 다른 벤치마크는 아래 전체 수치 표와 CSV에서 확인하세요.</p></noscript>
+</section>
+
+<section class="bench-latest" id="benchmark-latest" aria-labelledby="latest-heading">
+  <h2 id="latest-heading">2026년 11월: 최신 모델은 더 어려운 시험으로 이동했다</h2>
+  <p>Artificial Analysis의 <strong>Intelligence Index v5.0.1</strong>은 업무·코딩·과학 등 9개 평가를 합친 지수입니다. 아래는 같은 페이지에서 확인한 상위 16개입니다. 정답률(%)이 아니며 위 그래프와 축이 다릅니다.</p>
+  <figure class="bench-current-figure">
+    <figcaption>현행 지수 · 같은 평가 기관, 같은 버전 · 높을수록 좋음</figcaption>
+    <div class="bench-current-list">{current.map((model) => <div class="bench-current-row"><span>{model.name}</span><span class="bench-track" aria-hidden="true"><span style={`width:${model.value}%`}></span></span><strong>{model.value}</strong></div>)}</div>
+    <p class="bench-current-missing"><strong>Gemma 4 E4B: N/A</strong> — 현행 페이지에 같은 지수값이 없습니다. 검색에 남은 구버전 v4.3의 9점을 옮겨 쓰지 않았습니다.</p>
+    <a href={data.sources.aa.url} target="_blank" rel="noopener noreferrer">Artificial Analysis 원문 · 나머지 12개 모델은 전체 데이터에서 확인</a>
+  </figure>
+  <details class="bench-table-details"><summary>최신 모델의 코딩 평가도 보기</summary>
+    <p>{data.currentTasks.note}</p>
+    <div class="bench-table-wrap" tabindex="0" role="region" aria-label="최신 모델 Terminal-Bench 4.0 점수 표"><table><caption>Terminal-Bench 4.0 (AA) · Google의 현행 공식 표</caption><thead><tr><th scope="col">모델</th><th scope="col">성공률</th></tr></thead><tbody>{data.currentTasks.models.map((model) => <tr><th scope="row">{model.name}</th><td>{model.value.toFixed(1)}%</td></tr>)}<tr><th scope="row">Gemma 4 E4B</th><td>미확인</td></tr></tbody></table></div>
+    <a href={data.sources.gemini4.url} target="_blank" rel="noopener noreferrer">Google 공식 비교표</a>
+  </details>
+</section>
+
+<details class="bench-table-details" id="benchmark-data"><summary>역사 비교의 전체 95개 수치와 출처 보기</summary>
+  <p>PT는 사전학습 모델, IT는 지시학습 모델입니다. ‘추론’은 답변 전 생각하는 과정을 사용하는 모델입니다. 같은 이름의 시험이라도 조건이 다른 점수는 모델 행의 조건과 원문을 함께 확인하세요.</p>
+  <div class="bench-table-wrap" tabindex="0" role="region" aria-label="모델별 전체 벤치마크 표"><table>
+    <caption>2023–2026 주요 모델 31종 · 빈칸은 해당 점수를 이 조사에서 확인하지 못했다는 뜻</caption>
+    <thead><tr><th scope="col">모델 / 발표</th><th scope="col">MMLU</th><th scope="col">MMLU-Pro</th><th scope="col">GPQA Diamond</th><th scope="col">LCB v6</th><th scope="col">MMMU-Pro</th><th scope="col">HumanEval</th><th scope="col">AIME 2026</th><th scope="col">MRCR 128k</th><th scope="col">평가 조건 / 출처</th></tr></thead>
+    <tbody>{data.models.map((model) => <tr class:list={{ 'bench-target-tr': model.id === target.id }}><th scope="row">{model.name}<small>{model.date} · {model.mode}</small></th>{['mmlu', 'mmlupro', 'gpqa', 'lcb6', 'mmmupro', 'humaneval', 'aime26', 'mrcr'].map((key) => <td>{(model.scores as Record<string, number>)[key]?.toFixed(1) ?? '—'}</td>)}<td>{model.condition}<a href={data.sources[model.source as keyof typeof data.sources].url} target="_blank" rel="noopener noreferrer">원문</a></td></tr>)}</tbody>
+  </table></div>
+</details>
+
+<script>
+  import data from '../data/model-benchmarks.json';
+
+  type MetricKey = keyof typeof data.metrics;
+  const root = document.querySelector<HTMLElement>('.bench-explorer');
+  if (root) {
+    const metricSelect = root.querySelector<HTMLSelectElement>('#bench-metric')!;
+    const kindSelect = root.querySelector<HTMLSelectElement>('#bench-kind')!;
+    const yearSelect = root.querySelector<HTMLSelectElement>('#bench-year')!;
+    const sortSelect = root.querySelector<HTMLSelectElement>('#bench-sort')!;
+    const rows = root.querySelector<HTMLElement>('[data-bench-rows]')!;
+    const target = data.models.find((m) => m.id === 'gemma4e4')!;
+    const values = (model: (typeof data.models)[number]) => model.scores as Partial<Record<MetricKey, number>>;
+
+    function render() {
+      const key = metricSelect.value as MetricKey;
+      const targetScore = values(target)[key];
+      const models = data.models.filter((m) => values(m)[key] !== undefined && (kindSelect.value === 'all' || m.kind === kindSelect.value) && (yearSelect.value === 'all' || m.date.startsWith(yearSelect.value)));
+      models.sort((a, b) => sortSelect.value === 'score' ? values(b)[key]! - values(a)[key]! : (a.date.length === 4 ? `${a.date}-99` : a.date).localeCompare(b.date.length === 4 ? `${b.date}-99` : b.date));
+      root!.querySelector('[data-bench-title]')!.textContent = data.metrics[key].label;
+      root!.querySelector('[data-bench-note]')!.textContent = data.metrics[key].note;
+      root!.querySelector('[data-bench-count]')!.textContent = `${models.length}개 모델`;
+      root!.querySelector('[data-bench-reference]')!.textContent = targetScore === undefined ? 'E4B의 같은 점수 미확인 · 발표 주체별 공식 수치, 동일 조건 재시험 아님' : `E4B 기준 ${targetScore.toFixed(1)}% · 파란 막대가 기준 모델 · 발표 주체별 공식 수치, 동일 조건 재시험 아님`;
+      root!.querySelector<HTMLElement>('[data-bench-empty]')!.hidden = models.length > 0;
+      const fragment = document.createDocumentFragment();
+      for (const model of models) {
+        const value = values(model)[key]!;
+        const row = document.createElement('details');
+        row.className = `bench-row${model.id === target.id ? ' is-target' : ''}`;
+        const summary = document.createElement('summary');
+        const name = document.createElement('span'); name.className = 'bench-name'; name.append(model.name);
+        const meta = document.createElement('small'); meta.textContent = `${model.date} · ${model.mode}`; name.append(meta);
+        const track = document.createElement('span'); track.className = 'bench-track'; track.setAttribute('aria-hidden', 'true');
+        const bar = document.createElement('span'); bar.style.width = `${value}%`; track.append(bar);
+        const number = document.createElement('strong'); number.className = 'bench-value'; number.textContent = value.toFixed(1);
+        summary.append(name, track, number);
+        const detail = document.createElement('div'); detail.className = 'bench-row-detail';
+        const condition = document.createElement('p'); condition.textContent = model.condition;
+        if (targetScore !== undefined && model.id !== target.id) {
+          const diff = value - targetScore;
+          condition.textContent += ` · E4B보다 ${Math.abs(diff).toFixed(1)}%p ${diff >= 0 ? '높음' : '낮음'} (평가 조건 차이 있음)`;
+        }
+        const source = data.sources[model.source as keyof typeof data.sources];
+        const link = document.createElement('a'); link.href = source.url; link.textContent = source.title; link.target = '_blank'; link.rel = 'noopener noreferrer';
+        detail.append(condition, link); row.append(summary, detail); fragment.append(row);
+      }
+      rows.replaceChildren(fragment);
+    }
+    root.querySelector<HTMLElement>('[data-bench-controls]')!.hidden = false;
+    for (const select of [metricSelect, kindSelect, yearSelect, sortSelect]) select.addEventListener('change', render);
+    render();
+  }
+</script>

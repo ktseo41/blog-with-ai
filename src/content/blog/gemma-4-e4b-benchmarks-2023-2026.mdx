@@ -1,0 +1,126 @@
+---
+title: 'Gemma 4 E4B는 어느 정도일까: 2023–2026 모델 성능 비교'
+description: 'Gemma 4 E4B의 과학 추론은 2024년 Claude 3.5 Sonnet의 발표 점수에 근접한다. 주요 모델의 95개 점수와 2026년 11월 최신 평가를 그래프로 비교하고, Qwen3.5·이전 Gemma와의 차이를 살펴본다.'
+created_at: '2026-11-08'
+tags: ['AI', 'Gemma', 'LLM', '벤치마크', '로컬 AI']
+---
+
+import ModelBenchmarks from '../../components/ModelBenchmarks.astro';
+
+**Gemma 4 E4B는 작은 기기에서 텍스트·이미지·음성을 함께 다루려는 용도에 주목할 만한 공개 모델이다.** 과학 추론 시험 하나로 보면 2024년 중반의 대표 모델에 근접한다. 2026년의 최상위 추론 모델과는 여전히 차이가 크고, 비슷한 크기의 Qwen3.5도 함께 비교할 필요가 있다.
+
+가장 직관적인 수치는 <strong>GPQA Diamond 58.6%</strong>다. 대학원 수준 과학 문제를 푸는 시험으로, Claude 3 Opus의 50.4%보다 높고 2024년 6월 Claude 3.5 Sonnet의 59.4%에 가깝다. 다만 서로 다른 발표의 점수다. 이를 “작은 모델이 Claude 3.5의 모든 능력을 재현했다”는 뜻으로 넓혀 읽으면 안 된다. [Gemma 4 모델 카드](https://huggingface.co/google/gemma-4-E4B-it#benchmark-results), [Anthropic 모델 카드](https://assets.anthropic.com/m/1cd9d098ac3e6467/original/Claude-3-Model-Card-October-Addendum.pdf#page=6)
+
+| E4B의 공식 점수 | 무엇을 보는 시험인가 | 해석 |
+| --- | --- | --- |
+| MMLU-Pro **69.4%** | 다분야 지식·추론 | Google 비교표의 Gemma 3 27B IT보다 1.8%p 높음 |
+| GPQA Diamond **58.6%** | 어려운 과학 문제 | 2024년 6월 Sonnet의 발표 점수와 0.8%p 차이 |
+| LiveCodeBench v6 **52.0%** | 경진대회 코딩 | 간단한 함수 생성보다 어려운 문제도 상당수 해결 |
+| MMMU-Pro **52.6%** | 이미지가 포함된 지식·추론 | 문서·그림 이해를 지원하되 오독 가능성은 남음 |
+| AIME 2026 **42.5%** | 수학 경시 문제, 도구 없음 | 같은 표의 Gemma 4 31B는 89.2% |
+| MRCR v2, 8-needle, 128k 평균 **25.4%** | 긴 문맥 속 정보 활용 | 128k 입력 지원과 128k 내용을 정확히 활용하는 능력은 별개 |
+
+위 E4B 수치는 모두 [Google의 같은 공식 표](https://huggingface.co/google/gemma-4-E4B-it#benchmark-results)에서 가져왔다. 코딩 점수를 실제 개발 업무의 성공률로, 긴 문맥 점수를 일반 문서 요약의 정답률로 바꾸어 해석할 수는 없다.
+
+[역사 비교 그래프](#benchmark-history) · [2026년 11월 최신 모델](#benchmark-latest) · [실제로 고른다면](#choosing-e4b) · [전체 수치 표](#benchmark-data)
+
+<ModelBenchmarks />
+
+## 2023년: GPT-4의 도약과 7B 공개 모델의 출발점
+
+2023년에는 범용 지식 시험인 <strong>MMLU</strong>가 모델 간 차이를 보기 좋은 출발점이었다. LLaMA 1 65B는 63.4%, Llama 2 70B는 68.9%, GPT-4는 86.4%를 기록했다. 대형 공개 모델과 최상위 API 모델 사이에 상당한 차이가 있었다. [Meta 모델 카드](https://huggingface.co/meta-llama/Llama-2-70b-hf), [GPT-4 기술 보고서, 표 2](https://arxiv.org/pdf/2303.08774#page=7)
+
+그해 9월 Mistral 7B는 훨씬 작은 모델로 MMLU 60.1%와 HumanEval 30.5%를 냈다. 초기 공개 모델 발전의 중요한 축은 크기를 늘리는 일과 함께, 작은 모델의 학습·추론 효율을 끌어올리는 일이었다. [Mistral 논문, 표 2](https://arxiv.org/html/2310.06825#S3)
+
+![2023년부터 2025년까지 주요 모델의 MMLU 점수. 사전학습 모델과 지시학습 모델을 구분하며 Gemma 4 E4B의 MMLU-Pro 점수는 이 축에 넣지 않았다.](/benchmarks/mmlu-history.png)
+
+여기서 <strong>E4B의 69.4%는 MMLU-Pro</strong>라는 점이 중요하다. 기존 MMLU보다 어려운 별도 시험이다. GPT-4의 MMLU 86.4%와 빼서 “17점 부족하다”고 계산할 수 없다. 위 인터랙티브 그래프에서도 두 시험을 따로 선택하게 했다.
+
+## 2024년: E4B의 과학 추론을 가늠할 만한 기준점
+
+2024년에는 Claude 3 Opus, GPT-4o, Claude 3.5 Sonnet처럼 대화·코딩·이미지 이해를 폭넓게 다루는 모델이 등장했다. GPQA Diamond의 발표 점수는 각각 50.4%, 53.6%, 59.4%였다. E4B의 58.6%가 어느 정도인지 감을 잡기 좋은 구간이다. GPT-4o 값은 Anthropic 모델 카드에 인용된 값이며, 다른 기관의 재평가에서는 달라진다. [Anthropic 2024년 10월 모델 카드, 표 7](https://assets.anthropic.com/m/1cd9d098ac3e6467/original/Claude-3-Model-Card-October-Addendum.pdf#page=6)
+
+이 비교에서 내릴 수 있는 결론은 <strong>“E4B의 과학 추론 점수가 2024년 중반 선두 모델의 발표 점수 근처에 왔다”</strong>는 정도다. 0.8%p 차이로 우열을 단정할 수 없고, 장문 작성·지시 준수·도구 사용·속도까지 동등하다는 근거도 없다.
+
+같은 해 7월의 Llama 3.1 405B IT는 MMLU-Pro 73.3%, HumanEval 89.0%를 기록했다. E4B의 MMLU-Pro 69.4%는 여기에 미치지 못한다. 하나의 시험에서는 비슷해 보여도 다른 능력에서는 차이가 난다. [Meta 모델 카드](https://huggingface.co/meta-llama/Llama-3.1-405B-Instruct)
+
+## 2025년: 추론에 쓰는 시간이 성능의 큰 변수가 됐다
+
+2025년 1월 DeepSeek R1의 GPQA Diamond는 71.5%였다. 같은 발표에 실린 증류 모델은 7B가 49.1%, 14B가 59.1%, 32B가 62.1%를 기록했다. E4B 58.6%는 이 표의 <strong>R1-Distill-Qwen 14B와 비슷한 수치 구간</strong>에 있다. R1은 이후 버전이 있으므로 이 글은 최초 1월 버전과 구분해 표시했다. [DeepSeek R1 공식 모델 카드](https://huggingface.co/deepseek-ai/DeepSeek-R1)
+
+이 무렵부터 파라미터 수만으로 성능을 설명하기가 더 어려워졌다. 답을 내기 전에 더 긴 추론을 생성하면 작은 모델도 어려운 문제를 더 많이 풀 수 있지만, 응답 시간과 생성 토큰 비용도 늘어난다. 추론 모델의 높은 점수를 곧바로 짧고 빠른 답변 모드의 성능으로 기대해서는 안 된다.
+
+2025년 6월 Gemini 2.5 Pro GA의 GPQA Diamond는 86.4%였다. 11월 Gemini 3 Pro는 91.9%로 올라갔다. E4B가 이전 세대의 고성능 구간에 도달한 동안, 최상위 모델의 기준도 계속 움직였다. [Gemini 2.5 Pro 모델 카드](https://storage.googleapis.com/deepmind-media/Model-Cards/Gemini-2-5-Pro-Model-Card.pdf#page=5), [Gemini 3.1 Pro의 이전 모델 비교표](https://deepmind.google/models/model-cards/gemini-3-1-pro/)
+
+## 2026년: 이전 Gemma보다 강해졌지만, 소형 모델 경쟁도 치열하다
+
+Google은 2026년 4월 2일 Gemma 4를 발표했다. E4B의 개선 폭은 같은 공식 표의 Gemma 3 27B IT와 비교할 때 가장 읽기 쉽다. [Gemma 4 발표](https://blog.google/innovation-and-ai/technology/developers-tools/gemma-4/)
+
+| 벤치마크 | Gemma 3 27B IT | Gemma 4 E4B | 차이 |
+| --- | ---: | ---: | ---: |
+| MMLU-Pro | 67.6 | 69.4 | +1.8%p |
+| GPQA Diamond | 42.4 | 58.6 | +16.2%p |
+| LiveCodeBench v6 | 29.1 | 52.0 | +22.9%p |
+| MMMU-Pro | 49.7 | 52.6 | +2.9%p |
+| MRCR v2, 128k 평균 | 13.5 | 25.4 | +11.9%p |
+
+특히 과학 추론과 코딩의 개선이 크다. 다만 비교표에서 <strong>Gemma 3는 no think</strong>로 표시되어 있고, Gemma 4는 추론을 지원한다. 세부 추론 예산이 모두 공개되어 있지는 않으므로 이 차이 전체를 모델 구조나 파라미터 효율만의 성과로 계산하지 않았다. [Google 공식 비교표](https://huggingface.co/google/gemma-4-E4B-it#benchmark-results)
+
+현행 소형 공개 모델을 볼 때는 Qwen3.5도 빠뜨릴 수 없다.
+
+| 벤치마크 | Gemma 4 E4B | Qwen3.5 4B | Qwen3.5 9B |
+| --- | ---: | ---: | ---: |
+| MMLU-Pro | 69.4 | 79.1 | 82.5 |
+| GPQA Diamond | 58.6 | 76.2 | 81.7 |
+| LiveCodeBench v6 | 52.0 | 55.8 | 65.6 |
+| MMMU-Pro | 52.6 | 66.3 | 70.1 |
+
+이 표는 각 개발사의 공식 수치를 모은 것이다. Qwen3.5-4B는 과학 추론에서 17.6%p 높고, 코딩에서는 3.8%p 높다. **공개된 점수만으로 E4B를 동급 크기의 성능 최강자라고 부르기는 어렵다.** 다만 Qwen 카드의 긴 출력 권장 설정을 E4B와 같은 시간·토큰 예산에서 측정한 결과로 오해해서는 안 된다. 실제 선택에는 짧은 답변 모드의 품질, 음성 입력 필요 여부, 실행 환경도 영향을 준다. [Qwen 공식 모델 카드](https://huggingface.co/Qwen/Qwen3.5-4B), [Gemma 공식 모델 카드](https://huggingface.co/google/gemma-4-E4B-it)
+
+![Gemma 4 E4B와 Gemma 3 27B, Qwen3.5 4B 및 9B의 MMLU-Pro, GPQA Diamond, LiveCodeBench v6, MMMU-Pro 점수를 비교한 그래프. 서로 다른 개발사의 평가 조건이 다를 수 있다.](/benchmarks/gemma4-comparison.png)
+
+Gemma 계열 안에서도 E4B와 상위 모델의 간격은 크다. GPQA Diamond는 12B Unified가 78.8%, 26B A4B가 82.3%, 31B가 84.3%다. 12B는 6월 3일 추가됐으며, 더 많은 메모리를 쓸 수 있다면 E4B와 함께 검토할 후보가 된다. [Google 공식 성능표](https://huggingface.co/google/gemma-4-E4B-it#benchmark-results), [12B 발표](https://blog.google/innovation-and-ai/technology/developers-tools/introducing-gemma-4-12B/)
+
+## 최신 프런티어와의 차이는 GPQA 하나로 다 담기지 않는다
+
+2026년 2월 Gemini 3.1 Pro는 GPQA Diamond 94.3%, Claude Opus 4.6은 91.3%를 기록했다. 각각 E4B보다 35.7%p, 32.7%p 높다. 이 정도 간격은 E4B가 작은 모델로 발전했다는 사실과, 최상위 모델을 대체할 수 있다는 주장이 서로 다른 이야기임을 보여준다. [Google의 2026년 2월 비교표](https://deepmind.google/models/model-cards/gemini-3-1-pro/)
+
+11월 현재는 Gemini 4 Carbon·Argon, GPT-6 계열, Claude 5.5 계열이 현행 공식 문서와 평가표에 등장한다. 그래서 비교를 2월의 GPQA 표에서 끝내지 않고, 앞의 <strong>현행 지수 그래프</strong>에 최신 모델을 따로 수록했다. [Google 현행 모델](https://deepmind.google/models/gemini/), [OpenAI 공식 문서](https://developers.openai.com/api/docs/guides/latest-model), [Anthropic Opus 5.5](https://www.anthropic.com/claude-opus-5-5)
+
+최신 평가에서는 모델이 저장소를 수정하고, 도구를 호출하고, 업무를 여러 단계에 걸쳐 끝내는 능력의 비중이 커졌다. Gemini 4 공식 표의 Terminal-Bench 4.0 <strong>AA 측정값</strong>은 Carbon 65.2%, GPT-6 Astra 59.1%, Opus 5.5 59.6%다. 다른 하네스의 결과를 섞으면 같은 모델도 숫자가 달라진다. 이 글에서는 해당 표를 그대로 분리해 읽는다. E4B의 같은 평가값은 확인하지 못했다. [Google 공식 비교표](https://deepmind.google/models/gemini/)
+
+Artificial Analysis 지수도 버전이 바뀌면 구성 시험이 달라진다. 예전 검색 결과의 E4B ‘9’와 현행 v5.0.1의 Carbon ‘60’을 빼거나 비율로 나누는 계산은 유효하지 않다. 현행 E4B 페이지의 N/A는 점수가 없다는 뜻이며 0점이 아니다. [Artificial Analysis 현행 페이지](https://artificialanalysis.ai/models/gemma-4-e4b/)
+
+<h2 id="choosing-e4b">실제로 고른다면: 로컬 멀티모달용으로 먼저 시험해볼 모델</h2>
+
+E4B의 ‘E’는 **effective parameters**, 즉 유효 파라미터를 뜻한다. 공식 카드상 유효 규모는 약 4.5B, 임베딩을 포함한 규모는 약 8B다. 각 층에서 사용하는 별도 임베딩 테이블을 두는 구조라서 계산량과 저장 공간을 같은 숫자로 설명할 수 없다. 26B A4B의 A는 MoE에서의 활성 파라미터를 뜻하므로 E4B와도 구분해야 한다. [Google 모델 구조 설명](https://huggingface.co/google/gemma-4-E4B-it#dense-models)
+
+8B 가중치만 단순 계산하면 BF16은 약 16GB, 4비트는 약 4GB다. **이것은 산술상 가중치 용량이며 실행 메모리 실측이 아니다.** 인코더, 양자화 부가 정보, 문맥을 저장하는 KV 캐시와 실행 중 메모리가 더 필요하다. 특히 128k 문맥을 끝까지 쓰는 조건과 짧은 채팅 조건은 요구량이 다르다. 특정 기기에서의 속도나 최소 메모리는 이 조사에서 측정하지 않았다.
+
+| 하려는 일 | 이 자료를 바탕으로 한 판단 |
+| --- | --- |
+| 외부 전송 없이 짧은 문서·이미지·음성 입력 처리 | E4B를 로컬 후보로 시험해볼 이유가 있음. 실제 한국어 자료로 오류를 점검할 것 |
+| 작은 공개 모델로 수학·코딩 정답률을 높이기 | Qwen3.5-4B·9B도 함께 비교. 같은 출력 예산과 양자화 조건으로 확인 |
+| Gemma를 쓰면서 복잡한 추론 품질 높이기 | 메모리가 허용하면 12B·26B A4B·31B와 비교 |
+| 긴 문서에서 세부 근거를 빠짐없이 찾아야 하는 작업 | E4B의 128k 지원만 보고 선택하기 어려움. MRCR 25.4%와 실제 문서 검증이 필요 |
+| 저장소 전체 수정·긴 업무 자동화 | 최신 에이전트 평가와 직접 작업 성공률을 우선 확인. LCB 52%만으로 판단하기 어려움 |
+
+이 표는 벤치마크와 공식 사양을 바탕으로 한 판단이다. 한국어 답변 품질·환각 빈도·특정 하드웨어의 속도 순위는 별도로 측정하지 않았다. 다국어 평균인 MMMLU 76.6%를 한국어 단독 점수라고 부르지도 않았다. [Gemma 4 공식 성능표](https://huggingface.co/google/gemma-4-E4B-it#benchmark-results)
+
+## 비교 범위와 출처
+
+AI(GPT-6)와 함께 공개 자료를 조사·정리했다. 확인일은 <strong>2026년 11월 8일</strong>이다. 개발사 모델 카드·기술 보고서·공식 발표와 평가 기관 Artificial Analysis를 사용했다. 원문 수치를 대조했으며, 실제 모델 추론을 돌려 재측정한 보고서는 아니다.
+
+역사 비교는 주요 모델 **31종의 95개 점수**, 현행 지수는 <strong>28개 모델의 스냅샷</strong>이다. 2023년 이후 발표된 모든 모델을 망라하지 않는다. 역사 비교의 시기는 해당 버전의 발표 월이며, 나중에 발행된 비교표의 재평가값을 사용한 경우 조건에 적었다. Qwen3.5 두 모델은 이 데이터에 발표 월을 확정해 넣지 않아 연도만 표시한다.
+
+점수가 없는 셀은 비워두었고 보간하지 않았다. MMLU와 MMLU-Pro, GPQA 전체와 Diamond, MMMU와 Pro, AIME의 출제 연도, LiveCodeBench의 버전, 지수의 버전을 구분했다. 서로 다른 개발사의 점수는 토큰 예산·프롬프트·샘플링까지 통일된 비교가 아니므로, 작은 차이로 확정 순위를 매기지 않는다.
+
+대표 원문은 아래와 같다. 각 모델의 수치 출처와 평가 조건은 [전체 표](#benchmark-data), 그래프의 펼침 행, [CSV](/benchmarks/records.csv)에도 연결했다.
+
+- [Google Gemma 4 모델 카드](https://huggingface.co/google/gemma-4-E4B-it), [Gemma 1 모델 카드](https://ai.google.dev/gemma/docs/core/model_card), [Gemma 3 모델 카드](https://huggingface.co/google/gemma-3-27b-it)
+- [Meta Llama 2](https://huggingface.co/meta-llama/Llama-2-70b-hf), [Llama 3.1](https://huggingface.co/meta-llama/Llama-3.1-405B-Instruct), [Mistral 7B 논문](https://arxiv.org/html/2310.06825)
+- [OpenAI GPT-4 기술 보고서](https://arxiv.org/pdf/2303.08774), [현행 OpenAI 공식 문서](https://developers.openai.com/api/docs/guides/latest-model)
+- [Anthropic Claude 3 모델 카드](https://assets.anthropic.com/m/61e7d27f8c8f5919/original/Claude-3-Model-Card.pdf), [2024년 10월 추가 평가](https://assets.anthropic.com/m/1cd9d098ac3e6467/original/Claude-3-Model-Card-October-Addendum.pdf), [Opus 5.5](https://www.anthropic.com/claude-opus-5-5)
+- [DeepSeek R1](https://huggingface.co/deepseek-ai/DeepSeek-R1), [Qwen3.5-4B](https://huggingface.co/Qwen/Qwen3.5-4B)
+- [Gemini 2.5 Pro 모델 카드](https://storage.googleapis.com/deepmind-media/Model-Cards/Gemini-2-5-Pro-Model-Card.pdf), [Gemini 3.1 Pro 모델 카드](https://deepmind.google/models/model-cards/gemini-3-1-pro/), [Gemini 4 현행 표](https://deepmind.google/models/gemini/)
+- [Artificial Analysis 현행 지수·E4B 페이지](https://artificialanalysis.ai/models/gemma-4-e4b/)
