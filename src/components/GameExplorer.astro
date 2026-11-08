@@ -1,0 +1,42 @@
+---
+import records from '../data/ps5-games.json';
+import { defaults, PAGE_SIZE, renderGame, selectGames, type Game } from '../lib/games';
+import '../styles/games.css';
+
+const games = records as Game[];
+const initial = selectGames(games, defaults);
+---
+
+<section class="game-explorer" data-game-explorer aria-label="PS5 한국어 게임 찾아보기">
+	<p class="game-scope"><strong>{games.length}개 작품·판본</strong> · PS4 하위 호환 포함 · 자료 기준 2026.11.08</p>
+	<p class="game-current-note">구독 제공 여부는 확인일 기준입니다. <a href="#psplus-dates">종료 예정일을 함께 확인하세요.</a></p>
+	<div id="game-data-error" class="game-load-error" role="alert" hidden><p>다시 불러오거나 아래의 전체 CSV를 이용하세요.</p><button type="button">다시 불러오기</button></div>
+	<div class="game-presets" role="group" aria-label="빠른 필터">
+		<button type="button" data-game-preset data-filter="plus" data-value="included" aria-pressed="false">PS Plus 제공 확인</button>
+		<button type="button" data-game-preset data-filter="time" data-value="short" aria-pressed="false">본편 10시간 이하</button>
+		<button type="button" data-game-preset data-filter="score" data-value="90" aria-pressed="false">메타 90점 이상</button>
+		<button type="button" data-game-preset data-filter="plus" data-value="ending" aria-pressed="false">종료 일정 확인</button>
+	</div>
+	<form id="game-filters" role="search" aria-label="게임 조건 검색">
+		<label class="game-search"><span>게임 검색</span><input type="search" name="query" id="game-query" placeholder="한국어·영어 제목으로 검색" autocomplete="off" /></label>
+		<div class="game-filter-grid">
+			<label><span>메타스코어</span><select name="score" id="game-score"><option value="70">70점 이상</option><option value="80">80점 이상</option><option value="85">85점 이상</option><option value="90">90점 이상</option><option value="95">95점 이상</option></select></label>
+			<label><span>본편 시간</span><select name="time" id="game-time"><option value="">전체 시간</option><option value="short">10시간 이하</option><option value="medium">10~30시간</option><option value="long">30~60시간</option><option value="epic">60시간 초과</option><option value="unknown">시간 미확인</option></select></label>
+			<label><span>실행판</span><select name="platform" id="game-platform"><option value="">PS5·PS4 전체</option><option value="PS5">PS5 판본 있음</option><option value="PS4">PS4 판본 있음</option></select></label>
+			<label><span>트로피 완료 난도</span><select name="difficulty" id="game-difficulty"><option value="">전체 난도</option><option value="easy">1~3 / 10</option><option value="medium">3 초과~6 / 10</option><option value="hard">6 초과~10 / 10</option><option value="unknown">난도 미확인</option></select></label>
+			<label><span>한국 PS Plus</span><select name="plus" id="game-plus"><option value="">전체</option><option value="included">기준일 제공 확인</option><option value="ending">종료 일정 확인·보도</option><option value="trial">시간 제한 체험판</option><option value="unknown">제공 여부 미확인</option></select></label>
+		</div>
+		<div class="game-filter-foot"><span>난도는 플래티넘·트로피 100% 달성 기준입니다.</span><button type="reset">초기화</button></div>
+	</form>
+	<div class="game-results-toolbar">
+		<p id="game-result-count" role="status" aria-live="polite" tabindex="-1">{games.length}개 작품·판본</p>
+		<div><label class="game-sort"><span class="sr-only">목록 정렬</span><select id="game-sort"><option value="score">메타스코어 높은 순</option><option value="title">게임명 가나다순</option><option value="time">본편 시간 짧은 순</option><option value="difficulty">트로피 난도 낮은 순</option></select></label><button id="game-export" type="button">현재 목록 CSV</button></div>
+	</div>
+	<div class="game-list-heading" aria-hidden="true"><span>게임 / 실행판</span><span>메타</span><span>본편</span><span>트로피 난도</span><span>한국 PS Plus</span></div>
+	<div id="game-results" set:html={initial.slice(0, PAGE_SIZE).map(game => renderGame(game)).join('')} />
+	<nav class="game-pagination" aria-label="게임 목록 페이지"><button type="button" id="game-prev" disabled>이전</button><span id="game-page-status">1–{PAGE_SIZE} / {games.length}개 · 1 / {Math.ceil(games.length / PAGE_SIZE)}페이지</span><button type="button" id="game-next">다음</button></nav>
+	<p class="game-download"><a href="/games/ps5-korean-games-2026-11-08.csv" download>전체 확인 목록 CSV</a> · <a href="#game-research-method">수록 범위와 집계 기준</a></p>
+	<noscript><p>검색·정렬·다음 페이지는 JavaScript를 켜면 사용할 수 있습니다. 전체 자료는 위 CSV에서도 볼 수 있습니다.</p></noscript>
+</section>
+
+<script src="../scripts/games.ts"></script>

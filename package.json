@@ -7,7 +7,10 @@
   },
   "scripts": {
     "dev": "astro dev",
+    "export:games": "node --experimental-strip-types scripts/export-games.ts",
+    "prebuild": "npm run export:games",
     "build": "astro build",
+    "test:games": "node --experimental-strip-types --test src/lib/games.test.ts",
     "preview": "astro preview",
     "astro": "astro"
   },
